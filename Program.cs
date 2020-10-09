@@ -10,6 +10,7 @@ namespace AnaliseCredito
             decimal valor, rendaMensal;
             int parcelas;
             decimal valorParcela, valorMaximoParcela;
+            bool valorValido, rendaMensalValido, parcelasValido;
             bool creditoAprovado;
 
             Console.Clear();
@@ -24,30 +25,38 @@ namespace AnaliseCredito
             Console.Write("Qual a sua renda mensal ? ");
             rendaMensalDigitado = Console.ReadLine();
 
-            valor = Convert.ToDecimal(valorDigitado);
-            parcelas = Convert.ToInt32(parcelasDigitado);
-            rendaMensal = Convert.ToDecimal(rendaMensalDigitado);
+            valorValido = Decimal.TryParse(valorDigitado, out valor);
+            parcelasValido = Int32.TryParse(parcelasDigitado, out parcelas);
+            rendaMensalValido = Decimal.TryParse(rendaMensalDigitado, out rendaMensal);
 
             Console.WriteLine("---");
 
-            valorParcela = valor / parcelas;
-            valorMaximoParcela = rendaMensal * 0.3m;
-
-            Console.WriteLine($"Valor da parcela...: {valorParcela:C}");
-            Console.WriteLine($"Parcela máxima.....: {valorMaximoParcela:C}");
-
-            creditoAprovado = valorParcela <= valorMaximoParcela;
-
-            if (creditoAprovado)
+            if (!valorValido || !parcelasValido || !rendaMensalValido)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Parabéns, seu crédito foi aprovado! :)");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("Você digitou algum valor inválido. Tente novamente.");
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Desculpe, seu crédito não foi aprovado. :(");
-            }
+                valorParcela = valor / parcelas;
+                valorMaximoParcela = rendaMensal * 0.3m;
+
+                Console.WriteLine($"Valor da parcela...: {valorParcela:C}");
+                Console.WriteLine($"Parcela máxima.....: {valorMaximoParcela:C}");
+
+                creditoAprovado = valorParcela <= valorMaximoParcela;
+
+                if (creditoAprovado)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Parabéns, seu crédito foi aprovado! :)");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Desculpe, seu crédito não foi aprovado. :(");
+                }
+            }            
 
             Console.ResetColor();
             Console.WriteLine("Obrigado pela preferência!");
